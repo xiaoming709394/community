@@ -41,6 +41,7 @@ public class MapperTest {
             System.out.println(post);
         }
 
+        //总数
         int rows = discussPostMapper.selectDiscussPostRows(149);
         System.out.println(rows);
     }
