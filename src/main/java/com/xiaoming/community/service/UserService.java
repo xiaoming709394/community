@@ -1,6 +1,9 @@
 package com.xiaoming.community.service;
 
+import com.google.code.kaptcha.Producer;
+import com.xiaoming.community.dao.LoginTicketMapper;
 import com.xiaoming.community.dao.UserMapper;
+import com.xiaoming.community.entity.LoginTicket;
 import com.xiaoming.community.entity.User;
 import com.xiaoming.community.util.CommunityConstant;
 import com.xiaoming.community.util.CommunityUtil;
@@ -28,6 +31,9 @@ public class UserService implements CommunityConstant {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private LoginTicketMapper loginTicketMapper;
 
     @Autowired
     private MailClient mailClient;
@@ -101,10 +107,10 @@ public class UserService implements CommunityConstant {
         //发送激活邮件
         Context context = new Context();
         context.setVariable("email", user.getEmail());
-        //由于没能返回id,因此多查询一次
-        User userByName = userMapper.selectByName(user.getUsername());
+        //可以用注解把自动生成的id赋值到对应的entity对象，不用多查询一次
+        //User userByName = userMapper.selectByName(user.getUsername());
         // http://localhost:8080/community/activation/101/code
-        String url = domain + contextPath + "/activation/" + userByName.getId() + "/" + user.getActivationCode();
+        String url = domain + contextPath + "/activation/" + user.getId() + "/" + user.getActivationCode();
         context.setVariable("url", url);
         String content = templateEngine.process("/mail/activation", context);
         mailClient.sendMail(user.getEmail(), "激活账号", content);
@@ -129,6 +135,76 @@ public class UserService implements CommunityConstant {
         } else { //激活失败
             return ACTIVATION_FAILURE;
         }
+    }
+
+    /**
+     * 登录
+     *
+     * @param username
+     * @param password
+     * @param expiredSeconds
+     * @return
+     */
+    public Map<String, Object> login(String username, String password, int expiredSeconds) {
+        Map<String, Object> map = new HashMap<>();
+
+        //空值处理
+        if (StringUtils.isBlank(username)) {
+            map.put("usernameMsg", "账号不能为空");
+        }
+        if (StringUtils.isBlank(password)) {
+            map.put("passwordMsg", "密码不能为空");
+        }
+
+        //验证账号是否存在
+        User user = userMapper.selectByName(username);
+        if (user == null) {
+            map.put("usernameMsg", "该账号不存在");
+            return map;
+        }
+
+        //验证转态
+        if (user.getStatus() == 0) {
+            map.put("usernameMsg", "该账号未激活");
+            return map;
+        }
+
+        //验证密码
+        password = CommunityUtil.md5(password + user.getSalt());
+        if (!user.getPassword().equals(password)) {
+            map.put("passwordMsg", "密码不正确");
+            return map;
+        }
+
+        //生成登录凭证
+        LoginTicket loginTicket = new LoginTicket();
+        loginTicket.setUserId(user.getId());
+        loginTicket.setTicket(CommunityUtil.generateUUID());
+        loginTicket.setStatus(0);
+        loginTicket.setExpired(new Date(System.currentTimeMillis() + expiredSeconds * 1000));
+        loginTicketMapper.insertLoginTicket(loginTicket);
+
+        map.put("ticket", loginTicket.getTicket());
+        return map;
+    }
+
+    /**
+     * 注销登录
+     *
+     * @param ticket
+     */
+    public void logout(String ticket) {
+        loginTicketMapper.updateStatus(ticket, 1);
+    }
+
+    /**
+     * 通过凭证号获取登录信息
+     *
+     * @param ticket
+     * @return
+     */
+    public LoginTicket findLoginTicket(String ticket) {
+        return loginTicketMapper.selectByTicket(ticket);
     }
 
 }
