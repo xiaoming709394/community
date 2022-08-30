@@ -26,7 +26,7 @@
 
     <update id="updateHeader">
         update user
-        set head_url = #{headUrl}
+        set header_url = #{headerUrl}
         where id = #{id}
     </update>
 
