@@ -1,5 +1,6 @@
 package com.xiaoming.community.controller;
 
+import com.xiaoming.community.annotation.LoginRequired;
 import com.xiaoming.community.entity.User;
 import com.xiaoming.community.service.UserService;
 import com.xiaoming.community.util.CommunityUtil;
@@ -61,6 +62,7 @@ public class UserController {
      *
      * @return
      */
+    @LoginRequired
     @RequestMapping(path = "/setting", method = RequestMethod.GET)
     public String getSettingPage() {
         return "site/setting";
@@ -73,6 +75,7 @@ public class UserController {
      * @param model
      * @return
      */
+    @LoginRequired
     @RequestMapping(path = "/upload", method = RequestMethod.POST)
     public String uploadHeader(MultipartFile headerImage, Model model) {
         //未获取到头像信息
@@ -147,6 +150,7 @@ public class UserController {
      * @param newPassword
      * @return
      */
+    @LoginRequired
     @RequestMapping(path = "/uploadPassword", method = RequestMethod.POST)
     public String uploadPassword(Model model, String oldPassword, String newPassword) {
         //获取用户登录信息
