@@ -32,4 +32,29 @@ public interface DiscussPostMapper {
      * @return
      */
     int selectDiscussPostRows(@Param("userId") int userId);
+
+    /**
+     * 保存帖子
+     *
+     * @param discussPost
+     * @return
+     */
+    int insertDiscussPost(DiscussPost discussPost);
+
+    /**
+     * 通过id获取帖子详情
+     *
+     * @param id
+     * @return
+     */
+    DiscussPost selectDiscussPostById(int id);
+
+    /**
+     * 更新评论数量
+     *
+     * @param id
+     * @param commentCount
+     * @return
+     */
+    int updateCommentCount(int id, int commentCount);
 }
