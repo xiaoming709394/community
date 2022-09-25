@@ -253,4 +253,14 @@ public class UserService implements CommunityConstant {
         return null;
     }
 
+    /**
+     * 通过用户名称获取用户信息
+     *
+     * @param userName
+     * @return
+     */
+    public User findUserByName(String userName) {
+        return userMapper.selectByName(userName);
+    }
+
 }
