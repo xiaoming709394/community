@@ -34,7 +34,7 @@ import java.util.Map;
 public class UserController {
 
     /**
-     * 头像报错路径
+     * 头像保存路径
      */
     @Value("${community.path.upload}")
     private String uploadPath;
