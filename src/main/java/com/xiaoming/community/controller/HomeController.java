@@ -58,4 +58,15 @@ public class HomeController {
         //model.addAttribute("Page", page); 可加可不加，springboot都可以识别
         return "/index";
     }
+
+    /**
+     * 错误页面
+     *
+     * @return
+     */
+    @RequestMapping(path = "/error", method = RequestMethod.GET)
+    public String getErrorPage() {
+        return "/error/500";
+    }
+
 }
