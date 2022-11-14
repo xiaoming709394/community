@@ -11,9 +11,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
@@ -43,7 +42,7 @@ public class ElasticsearchTests {
     private DiscussPostRepository discussRepository;
 
     @Autowired
-    private ElasticsearchTemplate elasticTemplate;
+    private ElasticsearchRestTemplate elasticTemplate;
 
     /**
      * 插入一条数据

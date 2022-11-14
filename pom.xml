@@ -13,8 +13,11 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>community</name>
     <description>community</description>
+    <!--打包文件类型-->
+    <packaging>war</packaging>
+
     <properties>
-        <java.version>17</java.version>
+        <java.version>8</java.version>
     </properties>
     <dependencies>
         <dependency>
@@ -94,6 +97,7 @@
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
+            <version>2.8.2</version>
         </dependency>
 
         <dependency>
@@ -110,6 +114,8 @@
     </dependencies>
 
     <build>
+        <!--打包文件名-->
+        <finalName>ROOT</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

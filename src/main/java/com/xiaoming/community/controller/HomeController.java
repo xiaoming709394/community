@@ -32,6 +32,16 @@ public class HomeController {
     private DiscussPostService discussPostService;
 
     /**
+     * 根目录
+     *
+     * @return
+     */
+    @RequestMapping(path="/", method = RequestMethod.GET)
+    public String root() {
+        return "forward:/index";
+    }
+
+    /**
      * 首页
      *
      * @param model
